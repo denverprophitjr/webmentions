@@ -1,0 +1,19 @@
+name: Send webmentions for new blog posts
+on:
+  rss:
+    url: http://denverprophit.us/feed.xml
+    config:
+      logLevel: debug
+      limit: 1
+jobs:
+  send_webmentions:
+    name: Send webmentions
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Send webmentions for RSS item link'
+        uses: actionsflow/axios@v1
+        with:
+          url: https://webmention.app/check/
+          method: 'POST'
+          params: '{ "url": "${{on.rss.outputs.link}}", "token": "${{ secrets.WM_TOKEN }}" }'
+          is_debug: true
